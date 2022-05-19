@@ -87,6 +87,7 @@ const NewStudentView = (props) => {
             <br/>
             <br/>
           </form>
+          {props.errorMsg && <p>{props.errorMsg}</p>}
           </div>
       </div>
     </div>    

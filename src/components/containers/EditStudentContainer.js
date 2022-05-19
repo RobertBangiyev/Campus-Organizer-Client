@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
 import EditStudentView from '../views/EditStudentView';
-import { editStudentThunk, fetchStudentThunk } from '../../store/thunks';
+import { editStudentThunk, fetchStudentThunk, fetchAllCampusesThunk } from '../../store/thunks';
 
 class EditStudentContainer extends Component {
   // Initialize state
@@ -18,12 +18,14 @@ class EditStudentContainer extends Component {
       imageUrl: null,
       gpa: null,
       redirect: false, 
-      redirectId: null
+      redirectId: null,
+      errorMsg: null
     };
   }
 
   componentDidMount() {
     //getting student ID from url
+    this.props.fetchAllCampuses();
     this.handleInit(this.props.match.params.id);
   }
 
@@ -51,27 +53,44 @@ class EditStudentContainer extends Component {
   handleSubmit = async event => {
     event.preventDefault();  // Prevent browser reload/refresh after submit.
 
-    let student = {
-        firstname: this.state.firstname,
-        lastname: this.state.lastname,
-        campusId: this.state.campusId,
-        email: this.state.email,
-        imageUrl: this.state.imageUrl,
-        gpa: this.state.gpa,
-        id: this.state.redirectId
-    };
-    
-    // Update student in back-end database
-    await this.props.editStudent(student);
+    let contSubmit = false;
 
-    // Update state, and trigger redirect to updated student
-    this.setState({
-      firstname: "", 
-      lastname: "", 
-      campusId: null,
-      email: "",
-      redirect: true,
-    });
+    for(let i of this.props.allCampuses) {
+      if(i.id == this.state.campusId) {
+        contSubmit = true;
+        break;
+      }
+    }
+    if(!contSubmit) {
+        this.setState({
+            errorMsg: "Invalid Campus ID: Campus does not exist"
+        });
+    }
+    else {
+        let student = {
+            firstname: this.state.firstname,
+            lastname: this.state.lastname,
+            campusId: this.state.campusId,
+            email: this.state.email,
+            imageUrl: this.state.imageUrl,
+            gpa: this.state.gpa,
+            id: this.state.redirectId
+        };
+
+    
+    
+        // Update student in back-end database
+        await this.props.editStudent(student);
+
+        // Update state, and trigger redirect to updated student
+        this.setState({
+            firstname: "", 
+            lastname: "", 
+            campusId: null,
+            email: "",
+            redirect: true,
+        });
+    }
   }
 
   // Unmount when the component is being removed from the DOM:
@@ -93,7 +112,8 @@ class EditStudentContainer extends Component {
         <EditStudentView
           handleChange = {this.handleChange} 
           handleSubmit={this.handleSubmit}
-          student={this.state}      
+          student={this.state}
+          errorMsg={this.state.errorMsg}
         />
       </div>          
     );
@@ -103,6 +123,7 @@ class EditStudentContainer extends Component {
 const mapState = (state) => {
     return {
       student: state.student,  // Get the State object from Reducer "student"
+      allCampuses: state.allCampuses
     };
   };
 
@@ -113,6 +134,7 @@ const mapDispatch = (dispatch) => {
     return({
         fetchStudent: (id) => dispatch(fetchStudentThunk(id)),
         editStudent: (student) => dispatch(editStudentThunk(student)),
+        fetchAllCampuses: () => dispatch(fetchAllCampusesThunk()),
     })
 }
 
