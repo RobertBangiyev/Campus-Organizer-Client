@@ -20,7 +20,8 @@ class NewStudentContainer extends Component {
     this.state = {
       firstname: "", 
       lastname: "", 
-      campusId: null, 
+      campusId: null,
+      email: "",
       redirect: false, 
       redirectId: null
     };
@@ -40,7 +41,8 @@ class NewStudentContainer extends Component {
     let student = {
         firstname: this.state.firstname,
         lastname: this.state.lastname,
-        campusId: this.state.campusId
+        campusId: this.state.campusId,
+        email: this.state.email
     };
     
     // Add new student in back-end database
@@ -50,7 +52,8 @@ class NewStudentContainer extends Component {
     this.setState({
       firstname: "", 
       lastname: "", 
-      campusId: null, 
+      campusId: null,
+      email: "",
       redirect: true, 
       redirectId: newStudent.id
     });
