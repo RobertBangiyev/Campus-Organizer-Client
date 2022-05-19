@@ -22,6 +22,11 @@ const StudentView = (props) => {
       <h2>GPA: {student.gpa ? student.gpa : 'Not Available'}</h2>
       {!student.campus && <h3>Not enrolled in any colleges</h3>}
       <button onClick={() => handleDelete(student.id)}>Delete</button>
+      <br />
+      <br />
+      <Link to={`/editstudent/${student.id}`}>
+            <button>Edit Student</button>
+      </Link>
     </div>
   );
 
