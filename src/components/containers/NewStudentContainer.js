@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
 import NewStudentView from '../views/NewStudentView';
-import { addStudentThunk } from '../../store/thunks';
+import { addStudentThunk, fetchAllCampusesThunk } from '../../store/thunks';
 
 class NewStudentContainer extends Component {
   // Initialize state
@@ -25,8 +25,13 @@ class NewStudentContainer extends Component {
       imageUrl: null,
       gpa: null,
       redirect: false, 
-      redirectId: null
+      redirectId: null,
+      errorMsg: null
     };
+  }
+
+  componentDidMount() {
+    this.props.fetchAllCampuses();
   }
 
   // Capture input data when it is entered
@@ -40,27 +45,42 @@ class NewStudentContainer extends Component {
   handleSubmit = async event => {
     event.preventDefault();  // Prevent browser reload/refresh after submit.
 
-    let student = {
+    let contSubmit = false;
+
+    for(let i of this.props.allCampuses) {
+      if(i.id == this.state.campusId) {
+        contSubmit = true;
+        break;
+      }
+    }
+    if(!contSubmit) {
+      this.setState({
+        errorMsg: "Invalid Campus ID: Campus does not exist"
+      });
+    }
+    else {
+      let student = {
         firstname: this.state.firstname,
         lastname: this.state.lastname,
         campusId: this.state.campusId,
         email: this.state.email,
         imageUrl: this.state.imageUrl,
         gpa: this.state.gpa
-    };
+      };
     
-    // Add new student in back-end database
-    let newStudent = await this.props.addStudent(student);
+      // Add new student in back-end database
+      let newStudent = await this.props.addStudent(student);
 
-    // Update state, and trigger redirect to show the new student
-    this.setState({
-      firstname: "", 
-      lastname: "", 
-      campusId: null,
-      email: "",
-      redirect: true, 
-      redirectId: newStudent.id
-    });
+      // Update state, and trigger redirect to show the new student
+      this.setState({
+        firstname: "", 
+        lastname: "", 
+        campusId: null,
+        email: "",
+        redirect: true, 
+        redirectId: newStudent.id
+      });
+    }
   }
 
   // Unmount when the component is being removed from the DOM:
@@ -81,7 +101,8 @@ class NewStudentContainer extends Component {
         <Header />
         <NewStudentView 
           handleChange = {this.handleChange} 
-          handleSubmit={this.handleSubmit}      
+          handleSubmit={this.handleSubmit}
+          errorMsg={this.state.errorMsg}      
         />
       </div>          
     );
@@ -94,10 +115,17 @@ class NewStudentContainer extends Component {
 const mapDispatch = (dispatch) => {
     return({
         addStudent: (student) => dispatch(addStudentThunk(student)),
+        fetchAllCampuses: () => dispatch(fetchAllCampusesThunk()),
     })
 }
+
+const mapState = (state) => {
+  return {
+    allCampuses: state.allCampuses,  // Get the State object from Reducer "allCampuses"
+  };
+};
 
 // Export store-connected container by default
 // NewStudentContainer uses "connect" function to connect to Redux Store and to read values from the Store 
 // (and re-read the values when the Store State updates).
-export default connect(null, mapDispatch)(NewStudentContainer);
+export default connect(mapState, mapDispatch)(NewStudentContainer);
