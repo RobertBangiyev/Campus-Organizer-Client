@@ -8,22 +8,37 @@ If needed, it also defines the component's "connect" function.
 import Header from './Header';
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { fetchStudentThunk } from "../../store/thunks";
+import { fetchStudentThunk, deleteStudentThunk } from "../../store/thunks";
 import { StudentView } from "../views";
+import { Redirect } from 'react-router-dom'
 
 class StudentContainer extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      studRedirect: false
+    }
+  }
   // Get student data from back-end database
   componentDidMount() {
     //getting student ID from url
     this.props.fetchStudent(this.props.match.params.id);
   }
 
+  handleDelete = async studentId => {
+    await this.props.deleteStudent(studentId);
+    this.setState({
+      studRedirect: true
+    })
+  }
+
   // Render Student view by passing student data as props to the corresponding View component
   render() {
     return (
+      this.state.studRedirect ? <Redirect to={`/students`}/> :
       <div>
         <Header />
-        <StudentView student={this.props.student} />
+        <StudentView handleDelete={this.handleDelete} student={this.props.student} />
       </div>
     );
   }
@@ -41,6 +56,7 @@ const mapState = (state) => {
 const mapDispatch = (dispatch) => {
   return {
     fetchStudent: (id) => dispatch(fetchStudentThunk(id)),
+    deleteStudent: (studentId) => dispatch(deleteStudentThunk(studentId))
   };
 };
 

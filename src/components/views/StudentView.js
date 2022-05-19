@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 
 
 const StudentView = (props) => {
-  const { student } = props;
+  const { student, handleDelete } = props;
 
   // Render a single Student view 
   return (
@@ -21,6 +21,7 @@ const StudentView = (props) => {
       </Link>}
       <h2>GPA: {student.gpa ? student.gpa : 'Not Available'}</h2>
       {!student.campus && <h3>Not enrolled in any colleges</h3>}
+      <button onClick={() => handleDelete(student.id)}>Delete</button>
     </div>
   );
 
