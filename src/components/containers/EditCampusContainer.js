@@ -59,10 +59,12 @@ class EditStudentContainer extends Component {
         id: this.state.redirectId
     };
 
-    for(let i of this.state.removedStudents) {
-      const newStudent = i;
-      newStudent.campusId = null;
-      this.props.editStudent(newStudent);
+    if(this.state.removedStudents) {
+      for(let i of this.state.removedStudents) {
+        const newStudent = i;
+        newStudent.campusId = null;
+        this.props.editStudent(newStudent);
+      }
     }
     
     // Update student in back-end database
