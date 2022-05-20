@@ -54,12 +54,21 @@ class EditStudentContainer extends Component {
     event.preventDefault();  // Prevent browser reload/refresh after submit.
 
     let contSubmit = false;
+    let formCampusId = this.state.campusId;
 
-    for(let i of this.props.allCampuses) {
-      if(i.id == this.state.campusId) {
+
+    if(!formCampusId) {
         contSubmit = true;
-        break;
-      }
+        formCampusId = null;
+    }
+
+    if(!contSubmit) {
+        for(let i of this.props.allCampuses) {
+            if(i.id == this.state.campusId) {
+                contSubmit = true;
+                break;
+            }
+        }
     }
     if(!contSubmit) {
         this.setState({
@@ -70,7 +79,7 @@ class EditStudentContainer extends Component {
         let student = {
             firstname: this.state.firstname,
             lastname: this.state.lastname,
-            campusId: this.state.campusId,
+            campusId: formCampusId,
             email: this.state.email,
             imageUrl: this.state.imageUrl,
             gpa: this.state.gpa,
