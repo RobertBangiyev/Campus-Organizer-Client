@@ -85,6 +85,9 @@ const EditCampusView = (props) => {
             </Button>
             <br/>
             <br/>
+            {props.message && <p>{props.message}</p>}
+            <br/>
+            <br/>
           </form>
           </div>
       </div>

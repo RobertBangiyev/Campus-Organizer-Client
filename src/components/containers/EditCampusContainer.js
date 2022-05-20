@@ -17,6 +17,7 @@ class EditStudentContainer extends Component {
       imageUrl: null,
       students: null,
       removedStudents: null,
+      message: null,
       redirect: false, 
       redirectId: null
     };
@@ -84,6 +85,7 @@ class EditStudentContainer extends Component {
     currStudents = currStudents.filter(student => student.id !== studentId);
     removedStudentArr.push(removedStudent[0]);
     this.setState({
+      message: "Hit the submit button to save campus changes to database",
       students: currStudents,
       removedStudents: removedStudentArr
     })
@@ -109,6 +111,7 @@ class EditStudentContainer extends Component {
           handleChange = {this.handleChange} 
           handleSubmit={this.handleSubmit}
           handleStudentRemove={this.handleStudentRemove}
+          message={this.state.message}
           campus={this.state}      
         />
       </div>          
