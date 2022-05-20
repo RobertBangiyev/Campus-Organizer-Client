@@ -27,21 +27,21 @@ const AllCampusesView = (props) => {
       <h1>All Campuses</h1>
 
       {props.allCampuses.map((campus) => (
-        <div key={campus.id}>
+        <div className="campusContainer" key={campus.id}>
           <Link to={`/campus/${campus.id}`}>
             <h2>{campus.name}</h2>
           </Link>
-          <img style={{width:'10%', borderRadius:'50%'}} src={campus.imageUrl ? campus.imageUrl : "https://i.imgur.com/srY1LWf.jpg"} alt="" />
-          <h4>campus id: {campus.id}</h4>
-          <p>{campus.address}</p>
-          <p>{campus.description}</p>
-          <button onClick={() => deleteCampus(campus.id)}>Delete</button>
+          <img className="pfp" style={{width:'10%', borderRadius:'50%'}} src={campus.imageUrl ? campus.imageUrl : "https://i.imgur.com/srY1LWf.jpg"} alt="" />
+          <h4>Campus ID: {campus.id}</h4>
+          <h4>Address: {campus.address}</h4>
+          <h4>Description: {campus.description}</h4>
+          <button className="btn" onClick={() => deleteCampus(campus.id)}>Delete</button>
           <hr/>
         </div>
       ))}
       <br/>
       <Link to={`/newcampus`}>
-        <button>Add New Campus</button>
+        <button className="btn">Add New Campus</button>
       </Link>
       <br/><br/>
     </div>
