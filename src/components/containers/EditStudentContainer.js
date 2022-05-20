@@ -111,7 +111,7 @@ class EditStudentContainer extends Component {
   render() {
     // Redirect to updated student's page after submit
     if(this.state.redirect) {
-      return (<Redirect to={`/student/${this.state.redirectId}`}/>)
+      return (<Redirect to={`/students/${this.state.redirectId}`}/>)
     }
 
     // Display the input form via the corresponding View component
