@@ -1,6 +1,7 @@
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
+import { Link } from 'react-router-dom';
 
 // Create styling for the input form
 const useStyles = makeStyles( () => ({
@@ -29,7 +30,7 @@ const useStyles = makeStyles( () => ({
 }));
 
 const EditCampusView = (props) => {
-  const {campus, handleChange, handleSubmit } = props;
+  const {campus, handleChange, handleSubmit, handleStudentRemove } = props;
   const classes = useStyles();
 
   // Render an Edit Ca,[is] view with an input form
@@ -62,6 +63,20 @@ const EditCampusView = (props) => {
 
             <label style={{color:'#11153e', fontWeight: 'bold'}}>Pic URL: </label>
             <input type="text" name="imageUrl" value={campus.imageUrl ? campus.imageUrl : ""} onChange={(e) => handleChange(e)} />
+            <br/>
+            <br/>
+
+            {!campus.students && <h3>No Students Enrolled</h3>}
+            {campus.students && campus.students.map( student => {
+              let name = student.firstname + " " + student.lastname;
+              return (
+                <div key={student.id}>
+                    <h2>{name}</h2>
+                    <button onClick={(e) => handleStudentRemove(e, student.id)}>Remove from campus</button>        
+                </div>
+              );
+            })}
+
             <br/>
             <br/>
             
