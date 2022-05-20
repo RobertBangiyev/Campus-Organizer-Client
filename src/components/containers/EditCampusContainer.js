@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
 import EditCampusView from '../views/EditCampusView';
-import { editCampusThunk, fetchCampusThunk } from '../../store/thunks';
+import { editCampusThunk, fetchCampusThunk, editStudentThunk } from '../../store/thunks';
 
 class EditStudentContainer extends Component {
   // Initialize state
@@ -15,6 +15,8 @@ class EditStudentContainer extends Component {
       description: "", 
       address: "",
       imageUrl: null,
+      students: null,
+      removedStudents: null,
       redirect: false, 
       redirectId: null
     };
@@ -32,6 +34,7 @@ class EditStudentContainer extends Component {
         description: this.props.campus.description, 
         address: this.props.campus.address,
         imageUrl: this.props.campus.imageUrl,
+        students: this.props.campus.students,
         redirectId: this.props.campus.id
     });
   }
@@ -54,6 +57,12 @@ class EditStudentContainer extends Component {
         imageUrl: this.state.imageUrl,
         id: this.state.redirectId
     };
+
+    for(let i of this.state.removedStudents) {
+      const newStudent = i;
+      newStudent.campusId = null;
+      this.props.editStudent(newStudent);
+    }
     
     // Update student in back-end database
     await this.props.editCampus(campus);
@@ -65,6 +74,19 @@ class EditStudentContainer extends Component {
       address: "",
       redirect: true,
     });
+  }
+
+  handleStudentRemove = async (event, studentId) => {
+    event.preventDefault();
+    let currStudents = this.state.students;
+    let removedStudentArr = this.state.removedStudents ? this.state.removedStudents : [];
+    const removedStudent = currStudents.filter(student => student.id === studentId);
+    currStudents = currStudents.filter(student => student.id !== studentId);
+    removedStudentArr.push(removedStudent[0]);
+    this.setState({
+      students: currStudents,
+      removedStudents: removedStudentArr
+    })
   }
 
   // Unmount when the component is being removed from the DOM:
@@ -86,6 +108,7 @@ class EditStudentContainer extends Component {
         <EditCampusView
           handleChange = {this.handleChange} 
           handleSubmit={this.handleSubmit}
+          handleStudentRemove={this.handleStudentRemove}
           campus={this.state}      
         />
       </div>          
@@ -106,6 +129,7 @@ const mapDispatch = (dispatch) => {
     return({
         fetchCampus: (id) => dispatch(fetchCampusThunk(id)),
         editCampus: (campus) => dispatch(editCampusThunk(campus)),
+        editStudent: (student) => dispatch(editStudentThunk(student))
     })
 }
 
