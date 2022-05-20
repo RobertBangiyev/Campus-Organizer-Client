@@ -7,6 +7,29 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.btn {
+  background-color:  #3f51b5;
+  color: white;
+  border-radius: 10px;
+  font-size: 18px;
+}
+
+.btn:hover {
+  background-color: rgb(48, 49, 138);
+  transition-duration: 0.2s;
+}
+
+.pfp {
+ border: 5px solid black;
+}
+
+.home_img {
+  object-fit: cover;
+  width: 800px;
+  height: 500px;
+  border: 5px solid black;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
