@@ -29,6 +29,11 @@ const CampusView = (props) => {
         );
       })}
       <button onClick={() => handleDelete(campus.id)}>Delete</button>
+      <br />
+      <br />
+      <Link to={`/editcampus/${campus.id}`}>
+            <button>Edit Campus</button>
+      </Link>
     </div>
   );
 };
